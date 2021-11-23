@@ -2,13 +2,16 @@ package com.example.pessoa.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.pessoa.dto.PessoaDTO;
+import com.example.pessoa.dto.PessoaNoIdDTO;
 import com.example.pessoa.entities.Pessoa;
 import com.example.pessoa.repositories.PessoaRepository;
+import com.example.pessoa.services.exception.ObjectNotFoundException;
 
 @Service
 public class PessoaService {
@@ -16,42 +19,47 @@ public class PessoaService {
 	@Autowired
 	private PessoaRepository repository;
 
-	public Pessoa insert(PessoaDTO pessoadto) {
-		Pessoa ps = pessoadto.toEntity();
-		return repository.save(ps);
-	}
-
-	public Optional<Pessoa> findById(Long id) {
-		Optional<Pessoa> ps = repository.findById(id);
-		return ps;
-		
-
-	}
-
-	public Pessoa update(Long id, Pessoa pessoa) throws Exception {
-		Pessoa ps;
-		Optional<Pessoa> pessoaOptional = findById(id);
-		if(pessoaOptional.isPresent()) {
-		ps = pessoaOptional.get();
-		ps.setNome(pessoa.getNome());
-		ps.setIdade(pessoa.getIdade());
-		ps.setCpf(pessoa.getCpf());
-		ps.setEndereco(pessoa.getEndereco());
+	public PessoaNoIdDTO insert(PessoaNoIdDTO pessoa) {
+		Pessoa ps = pessoa.toEntity();
 		repository.save(ps);
-		return ps;
-		}
-		else {
-			throw new Exception("Pessoa não encontrada!");
-		}
-		
+		return pessoa;
 	}
 
-	public List<Pessoa> findAll() {
-		return repository.findAll();
+	public PessoaNoIdDTO findById(Long id) {
+		Optional<Pessoa> ps = repository.findById(id);
+		ps.orElseThrow(() -> new ObjectNotFoundException("Pessoa não cadastrada"));
+		PessoaNoIdDTO psdto = new PessoaNoIdDTO(ps.get());
+		return psdto;
+	}
+
+	public PessoaNoIdDTO update(Long id, PessoaNoIdDTO pesso) {
+		try {
+			Pessoa ps;
+			PessoaNoIdDTO pessoadto = findById(id);
+			if (pessoadto != null) {
+				ps = pessoadto.toEntity();
+				ps.setNome(pessoadto.getNome());
+				ps.setIdade(pessoadto.getIdade());
+				ps.setCpf(pessoadto.getCpf());
+				ps.setEndereco(pessoadto.getEndereco());
+				repository.save(ps);
+				return pesso;
+			} else {
+				throw new ObjectNotFoundException("Pessoa não encontrada!");
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+
+	}
+
+	public List<PessoaDTO> findAll() {
+		List<Pessoa> result = repository.findAll();
+		return result.stream().map(x -> new PessoaDTO(x)).collect(Collectors.toList());
 	}
 
 	public void deleteById(Long id) {
 		repository.deleteById(id);
 	}
-
 }

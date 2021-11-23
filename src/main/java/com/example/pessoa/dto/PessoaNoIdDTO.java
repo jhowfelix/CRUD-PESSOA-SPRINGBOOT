@@ -12,9 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PessoaDTO {
-
-	private Long id;
+public class PessoaNoIdDTO {
 
 	private String nome;
 
@@ -24,8 +22,7 @@ public class PessoaDTO {
 
 	private Endereco endereco;
 
-	public PessoaDTO(Pessoa entity) {
-		id = entity.getId();
+	public PessoaNoIdDTO(Pessoa entity) {
 		nome = entity.getNome();
 		cpf = entity.getCpf();
 		idade = entity.getIdade();

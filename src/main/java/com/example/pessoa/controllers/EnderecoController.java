@@ -1,7 +1,6 @@
 package com.example.pessoa.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.pessoa.dto.EnderecoDTO;
-import com.example.pessoa.entities.Endereco;
 import com.example.pessoa.services.EnderecoService;
 
 @RestController
@@ -25,8 +23,8 @@ public class EnderecoController {
 	private EnderecoService service;
 
 	@PostMapping
-	public Endereco insert(@RequestBody EnderecoDTO Endereco) {
-		return service.insert(Endereco);
+	public ResponseEntity<EnderecoDTO> insert(@RequestBody EnderecoDTO enderecoDTO) {
+		return service.insert(enderecoDTO);
 	}
 
 	@GetMapping
@@ -36,8 +34,8 @@ public class EnderecoController {
 	}
 
 	@GetMapping(value = "/{id}")
-	public Optional<Endereco> findById(@PathVariable("id") Long id) {
-		return service.findById(id);
+	public ResponseEntity<EnderecoDTO> findById(@PathVariable("id") Long id) {
+		return ResponseEntity.ok(service.findById(id));
 	}
 
 	@DeleteMapping(value = "/{id}")

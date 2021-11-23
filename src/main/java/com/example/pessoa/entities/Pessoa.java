@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +40,7 @@ public class Pessoa implements Serializable {
 	@Column(name = "tb_cpf")
 	private int cpf;
 
+	@JsonProperty(index = 1,   value = "yearsOld")
 	@Column(name = "tb_idade")
 	private int idade;
 

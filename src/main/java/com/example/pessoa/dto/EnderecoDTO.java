@@ -18,11 +18,11 @@ public class EnderecoDTO {
 	private int cep;
 	private int numero;
 
-	public EnderecoDTO(Endereco entity) {
-		id = entity.getId();
-		rua = entity.getRua();
-		cep = entity.getCep();
-		numero = entity.getNumero();
+	public EnderecoDTO(Endereco enderecoEntity) {
+		id = enderecoEntity.getId();
+		rua = enderecoEntity.getRua();
+		cep = enderecoEntity.getCep();
+		numero = enderecoEntity.getNumero();
 
 	}
 

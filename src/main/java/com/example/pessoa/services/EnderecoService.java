@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.pessoa.dto.EnderecoDTO;
@@ -13,25 +14,27 @@ import com.example.pessoa.repositories.EnderecoRepository;
 
 @Service
 public class EnderecoService {
-	
+
 	@Autowired
 	private EnderecoRepository repository;
-	
-	public Endereco insert(EnderecoDTO enderecodto) {
+
+	public ResponseEntity<EnderecoDTO> insert(EnderecoDTO enderecodto) {
 		Endereco endereco = enderecodto.toEntity();
-		return repository.save(endereco);
+		repository.save(endereco);
+		return ResponseEntity.ok(enderecodto);
 	}
-	
+
 	public List<EnderecoDTO> findAll() {
 		List<Endereco> result = repository.findAll();
-		// Convertendo o tipo da lista para DTO
 		return result.stream().map(x -> new EnderecoDTO(x)).collect(Collectors.toList());
 	}
-	public Optional<Endereco> findById(Long id) {
-		Optional<Endereco> endereco =  repository.findById(id);
-		return endereco;
+
+	public EnderecoDTO findById(Long id) {
+		Optional<Endereco> endereco = repository.findById(id);
+		EnderecoDTO enderecodto = new EnderecoDTO(endereco.get());
+		return enderecodto;
 	}
-	
+
 	public void delete(Long id) {
 		repository.deleteById(id);
 	}
