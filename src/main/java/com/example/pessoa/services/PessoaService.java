@@ -27,7 +27,7 @@ public class PessoaService {
 
 	public PessoaNoIdDTO findById(Long id) {
 		Optional<Pessoa> ps = repository.findById(id);
-		ps.orElseThrow(() -> new ObjectNotFoundException("Pessoa não cadastrada"));
+		ps.orElseThrow(() -> new ObjectNotFoundException("Not found"));
 		PessoaNoIdDTO psdto = new PessoaNoIdDTO(ps.get());
 		return psdto;
 	}
@@ -45,7 +45,7 @@ public class PessoaService {
 				repository.save(ps);
 				return pesso;
 			} else {
-				throw new ObjectNotFoundException("Pessoa não encontrada!");
+				throw new ObjectNotFoundException("Not found");
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -56,10 +56,14 @@ public class PessoaService {
 
 	public List<PessoaDTO> findAll() {
 		List<Pessoa> result = repository.findAll();
+		if(result == null) {
+			throw new ObjectNotFoundException("Not Found");
+		}
 		return result.stream().map(x -> new PessoaDTO(x)).collect(Collectors.toList());
 	}
 
 	public void deleteById(Long id) {
+		findById(id);
 		repository.deleteById(id);
 	}
 }
