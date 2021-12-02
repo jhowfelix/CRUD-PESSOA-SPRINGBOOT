@@ -5,3 +5,4 @@
 # Tech utilizadas
 ## Lombok > Framework que reduz a verbosidade do código, utilizei nesta aplicação para geração de getters/setter e construtores.
 ## Banco de dados em h2
+## /swagger-ui/ -> Documentação da API explicando sobre as requisições suas possiveis respostas e os dados para as requisições
