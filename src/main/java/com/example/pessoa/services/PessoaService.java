@@ -32,31 +32,33 @@ public class PessoaService {
 		return psdto;
 	}
 
-	public PessoaNoIdDTO update(Long id, PessoaNoIdDTO pesso) {
-		try {
-			Pessoa ps;
-			PessoaNoIdDTO pessoadto = findById(id);
-			if (pessoadto != null) {
-				ps = pessoadto.toEntity();
-				ps.setNome(pessoadto.getNome());
-				ps.setIdade(pessoadto.getIdade());
-				ps.setCpf(pessoadto.getCpf());
-				ps.setEndereco(pessoadto.getEndereco());
-				repository.save(ps);
-				return pesso;
-			} else {
-				throw new ObjectNotFoundException("Not found");
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+	public PessoaDTO update(Long id, PessoaDTO request) {
+		Optional<Pessoa> ps = repository.findById(id);
+		PessoaDTO pessoaDoBanco = new PessoaDTO(ps.get());
+		if(request.getNome()==null) {
+			request.setNome(pessoaDoBanco.getNome());
 		}
-		return null;
-
+		if(request.getIdade() == 0) {
+			request.setIdade(pessoaDoBanco.getIdade());
+		}
+		if(request.getCpf() == 0) {
+			request.setCpf(pessoaDoBanco.getIdade());
+		}
+		if(request.getEndereco() == null) {
+			request.setEndereco(pessoaDoBanco.getEndereco());
+		}
+		pessoaDoBanco.setNome(request.getNome());
+		pessoaDoBanco.setIdade(request.getIdade());
+		pessoaDoBanco.setCpf(request.getCpf());
+		pessoaDoBanco.setEndereco(request.getEndereco());
+		repository.save(pessoaDoBanco.toEntity());
+		return request;
 	}
+
 
 	public List<PessoaDTO> findAll() {
 		List<Pessoa> result = repository.findAll();
-		if(result == null) {
+		if (result == null) {
 			throw new ObjectNotFoundException("Not Found");
 		}
 		return result.stream().map(x -> new PessoaDTO(x)).collect(Collectors.toList());

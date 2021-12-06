@@ -33,6 +33,6 @@ public class PessoaDTO {
 	}
 
 	public Pessoa toEntity() {
-		return new Pessoa(null, this.nome, this.idade, this.cpf, this.endereco);
+		return new Pessoa(this.id, this.nome, this.idade, this.cpf, this.endereco);
 	}
 }

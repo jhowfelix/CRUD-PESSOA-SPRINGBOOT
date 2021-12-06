@@ -23,42 +23,45 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/api")
-@Api(value="API REST PESSOA")
-@CrossOrigin(origins="*")
+@Api(value = "API REST PESSOA")
+@CrossOrigin(origins = "*")
 public class PessoaController {
-	
+
 	@Autowired
 	private PessoaService service;
-	
+
 	@PostMapping
-	@ApiOperation(value ="Adiciona uma pessoa no banco em h2")
+	@ApiOperation(value = "Adiciona uma pessoa no banco em h2")
 	public ResponseEntity<PessoaNoIdDTO> insert(@RequestBody PessoaNoIdDTO pessoa) {
-		return ResponseEntity.ok(service.insert(pessoa));
+		service.insert(pessoa);
+		return ResponseEntity.ok(pessoa);
 	}
+
 	@GetMapping
 	@ApiOperation(value = "Retorna todas as pessoas do banco")
-	public ResponseEntity<List<PessoaDTO>> findAll( ){
+	public ResponseEntity<List<PessoaDTO>> findAll() {
 		List<PessoaDTO> result = service.findAll();
 		return ResponseEntity.ok(result);
 	}
-	@GetMapping(value ="/{id}")
+
+	@GetMapping(value = "/{id}")
 	@ApiOperation(value = "Retorna a pessoa pelo id")
 	public ResponseEntity<PessoaNoIdDTO> findById(@PathVariable("id") Long id) {
 		return ResponseEntity.ok(service.findById(id));
 	}
-	
+
 	@PutMapping(value = "/{id}")
 	@ApiOperation(value = "Atualiza uma pessoa.")
-	public ResponseEntity<PessoaNoIdDTO> update(@PathVariable("id") Long id, @RequestBody PessoaNoIdDTO pessoa) throws Exception{
-		return ResponseEntity.ok(service.update(id, pessoa));
+	public ResponseEntity<PessoaDTO> update(@PathVariable("id") Long id, @RequestBody PessoaDTO pessoa) {
+		service.update(id, pessoa);
+		return ResponseEntity.ok(pessoa);
 	}
-	
+
 	@DeleteMapping(path = "/{id}")
 	@ApiOperation(value = "Deleta uma pessoa pelo id")
 	public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
 		service.deleteById(id);
 		return ResponseEntity.ok(null);
 	}
-
 
 }
